@@ -31,34 +31,62 @@ function type() {
 type();
 
 // Contact form
-document.getElementById("contactForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+document
+  .getElementById("contactForm")
+  .addEventListener("submit", async (e) => {
 
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const message = document.getElementById("message").value;
+    e.preventDefault();
 
-  const status = document.getElementById("formStatus");
+    const button = document.querySelector("#contactForm button");
+    const status = document.getElementById("formStatus");
 
-  try {
-    const res = await fetch("https://portfolio-backend-1-khak.onrender.com/api/contact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, message }),
-    });
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
 
-    const data = await res.json();
+    button.disabled = true;
+    button.innerText = "Sending...";
 
-    if (res.ok) {
-      status.textContent = "Message sent successfully ✅";
-    } else {
-      status.textContent = "Error sending message ❌";
+    try {
+
+      const res = await fetch(
+        "https://portfolio-backend-1-khak.onrender.com/api/contact",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            message,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+
+        status.innerHTML = "Message sent successfully ✅";
+
+        document.getElementById("contactForm").reset();
+
+      } else {
+
+        status.innerHTML = "Failed to send ❌";
+
+      }
+
+    } catch (err) {
+
+      status.innerHTML = "Server error ❌";
+
     }
-  } catch (err) {
-    status.textContent = "Server error ❌";
-  }
+
+    button.disabled = false;
+    button.innerText = "Send Message";
+
 });
 
 // Scroll reveal animations

@@ -257,6 +257,12 @@ input:focus, textarea:focus{border-color:#c7d2fe; box-shadow:0 0 0 4px rgba(124,
   color: #0b0e16;
   transform: scale(1.05);
 }
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 /* FORCE VISIBILITY FIX */
 .reveal-up,
 .reveal-pop {

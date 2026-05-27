@@ -25,18 +25,15 @@ router.post("/", async (req, res) => {
 
     console.log("DATABASE SAVE SUCCESS ✅");
 
-    // SEND EMAIL
-    await sendEmail({
+    res.status(200).json({
+      success: true,
+    });
+
+    // email in background
+    sendEmail({
       name,
       email,
       message,
-    });
-
-    console.log("EMAIL FUNCTION CALLED ✅");
-
-    res.status(200).json({
-      success: true,
-      message: "Message saved successfully",
     });
 
   } catch (err) {
