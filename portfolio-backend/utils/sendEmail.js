@@ -13,13 +13,11 @@ const sendEmail = async ({ name, email, message }) => {
   try {
 
     const info = await transporter.sendMail({
-
       from: process.env.EMAIL_USER,
-
-      to: process.env.EMAIL_USER,
-
+      to: process.env.EMAIL_TO || process.env.EMAIL_USER,
+      replyTo: email,
       subject: "New Portfolio Message 🚀",
-
+      text: `Name: ${name}\nEmail: ${email}\nMessage:\n${message}`,
       html: `
         <div style="
           font-family: Arial;
