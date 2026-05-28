@@ -1,5 +1,6 @@
 // ================= CONFIG =================
 const API_URL = "https://portfolio-backend-1-khak.onrender.com/api/admin";
+const CONTACT_URL = "https://portfolio-backend-1-khak.onrender.com/api/contact";
 
 console.log("ADMIN JS LOADED 🚀");
 
@@ -80,7 +81,6 @@ const container = document.getElementById("messagesContainer");
 let allMessages = [];
 
 if (container) {
-  // Guard: redirect if not logged in
   if (!localStorage.getItem("adminLoggedIn")) {
     window.location.href = "/admin/admin-login.html";
   } else {
@@ -96,15 +96,18 @@ async function loadMessages() {
 
     const token = localStorage.getItem("token");
 
-    const res = await fetch(`https://portfolio-backend-1-khak.onrender.com/api/admin/messages`, {
+    const res = await fetch(`${CONTACT_URL}/messages`, {
       headers: { Authorization: token }
     });
 
     const data = await res.json();
     console.log("MESSAGES:", data);
 
-    allMessages = data;
-    renderMessages(data);
+    // Handle both {success, messages: []} and plain array []
+    const messages = Array.isArray(data) ? data : (data.messages || []);
+
+    allMessages = messages;
+    renderMessages(messages);
 
   } catch (err) {
     console.error("Error loading messages ❌", err);
@@ -121,7 +124,7 @@ function renderMessages(messages) {
 
   container.innerHTML = "";
 
-  if (messages.length === 0) {
+  if (!messages || messages.length === 0) {
     container.innerHTML = `<div class="empty-state"><h3>No messages found 📭</h3></div>`;
     return;
   }
@@ -133,7 +136,7 @@ function renderMessages(messages) {
     div.innerHTML = `
       <div class="card-header">
         <h3>${msg.name}</h3>
-        <span>${new Date(msg.time).toLocaleString()}</span>
+        <span>${new Date(msg.createdAt || msg.time).toLocaleString()}</span>
       </div>
       <p class="email">${msg.email}</p>
       <p class="message">${msg.message}</p>
@@ -171,7 +174,7 @@ async function deleteMessage(id) {
 
     const token = localStorage.getItem("token");
 
-    await fetch(`https://portfolio-backend-1-khak.onrender.com/api/admin/messages/${id}`, {
+    await fetch(`${CONTACT_URL}/messages/${id}`, {
       method: "DELETE",
       headers: { Authorization: token }
     });
