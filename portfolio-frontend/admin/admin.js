@@ -96,7 +96,7 @@ async function loadMessages() {
 
     const token = localStorage.getItem("token");
 
-    const res = await fetch(`https://portfolio-backend-1-khak.onrender.com/api/messages`, {
+    const res = await fetch(`https://portfolio-backend-1-khak.onrender.com/api/admin/messages`, {
       headers: { Authorization: token }
     });
 
@@ -171,7 +171,7 @@ async function deleteMessage(id) {
 
     const token = localStorage.getItem("token");
 
-    await fetch(`https://portfolio-backend-1-khak.onrender.com/api/messages/${id}`, {
+    await fetch(`https://portfolio-backend-1-khak.onrender.com/api/admin/messages/${id}`, {
       method: "DELETE",
       headers: { Authorization: token }
     });
