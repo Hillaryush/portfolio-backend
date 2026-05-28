@@ -37,10 +37,10 @@ if (loginBtn) {
       if (data.success) {
 
         localStorage.setItem("token", data.token);
-
+        localStorage.setItem("adminLoggedIn", "true");
         alert("Login Successful ✅");
 
-        window.location.href = "dashboard.html";
+        window.location.href = "/admin/dashboard.html";
 
       } else {
 
