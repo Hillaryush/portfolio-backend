@@ -11,7 +11,8 @@ const loginBtn = document.getElementById("loginBtn");
 if (loginBtn) {
 
   loginBtn.addEventListener("click", async (e) => {
-  e.preventDefault();
+
+    e.preventDefault();
 
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
@@ -21,11 +22,11 @@ if (loginBtn) {
       return;
     }
 
-    console.log("LOGIN CLICKED:", email);
+    loginBtn.innerText = "Logging in...";
 
     try {
 
-      const res = await fetch(`${API_URL}/api/login`, {
+      const res = await fetch(`${API_URL}/api/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -37,7 +38,7 @@ if (loginBtn) {
 
       console.log("LOGIN RESPONSE:", data);
 
-      if (data.token) {
+      if (res.ok && data.token) {
 
         localStorage.setItem("token", data.token);
         localStorage.setItem("adminLoggedIn", "true");
@@ -48,14 +49,18 @@ if (loginBtn) {
 
       } else {
 
-        alert("Invalid credentials ❌");
+        alert(data.message || "Invalid credentials ❌");
 
       }
 
     } catch (err) {
 
       console.error("Login error ❌", err);
-      alert("Server error. Please try again.");
+      alert("Server error ❌");
+
+    } finally {
+
+      loginBtn.innerText = "Login";
 
     }
 
@@ -135,9 +140,14 @@ function renderMessages(messages) {
         <h3>${msg.name}</h3>
         <span>${new Date(msg.time).toLocaleString()}</span>
       </div>
+
       <p class="email">${msg.email}</p>
+
       <p class="message">${msg.message}</p>
-      <button class="delete-btn" onclick="deleteMessage('${msg._id}')">Delete</button>
+
+      <button class="delete-btn" onclick="deleteMessage('${msg._id}')">
+        Delete
+      </button>
     `;
 
     container.appendChild(div);
@@ -172,7 +182,9 @@ if (searchInput) {
 
 async function deleteMessage(id) {
 
-  const confirmDelete = confirm("Are you sure you want to delete this message?");
+  const confirmDelete = confirm(
+    "Are you sure you want to delete this message?"
+  );
 
   if (!confirmDelete) return;
 
