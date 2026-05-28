@@ -7,7 +7,11 @@ const mongoose = require("mongoose");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "https://hillaryush-portfolio.vercel.app",
+  methods: ["GET", "POST"],
+  credentials: true,
+}));
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -18,20 +22,19 @@ app.get('/ping', (req, res) => {
   res.status(200).json({ status: 'alive' });
 });
 
-app.use("/api/contact", require("./routes/contact"));
-app.use("/contact", require("./routes/contact"));
-
+const contactRoute = require("./routes/contact");
 const adminAuth = require("./routes/adminAuth");
-app.use("/api/admin", adminAuth);
-app.use("/api", adminAuth);
-
 const adminMessages = require("./routes/adminMessages");
+
+app.use("/api/contact", contactRoute);
+app.use("/api/admin", adminAuth);
 app.use("/api/admin", adminMessages);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log(err));
+  .catch((err) => console.error(err));
 
-app.listen(5000, () =>
-  console.log("✅ Backend running on http://localhost:5000")
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () =>
+  console.log(`✅ Backend running on http://localhost:${PORT}`)
 );
