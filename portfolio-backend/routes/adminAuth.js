@@ -1,19 +1,43 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
+
 const router = express.Router();
 
-router.post("/login", (req, res) => {
-  const { email, password } = req.body;
+router.post("/login", async (req, res) => {
 
-  console.log("LOGIN DATA:", email, password);
+  try {
 
-  if (email === "ayushpatel5779@gmail.com" && password === "1234") {
-    const token = jwt.sign({ email }, "secretkey123", { expiresIn: "1h" });
+    const { email, password } = req.body;
 
-    return res.json({ token }); // ✅ VERY IMPORTANT
+    console.log("LOGIN DATA:", email, password);
+
+    if (
+      email === "ayushpatel5779@gmail.com" &&
+      password === "1234"
+    ) {
+
+      return res.json({
+        success: true,
+        token: "admin-token"
+      });
+
+    }
+
+    return res.status(401).json({
+      success: false,
+      message: "Invalid credentials"
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
+
   }
 
-  return res.status(401).json({ error: "Invalid credentials" });
 });
 
 module.exports = router;
