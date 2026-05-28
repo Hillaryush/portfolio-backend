@@ -47,6 +47,13 @@ document
     button.disabled = true;
     button.innerText = "Sending...";
 
+    // Add a timeout message after 5 seconds
+    setTimeout(() => {
+      if (button.innerText === "Sending...") {
+        button.innerText = "Almost there...";
+      }
+    }, 5000);
+
     try {
 
       const res = await fetch(

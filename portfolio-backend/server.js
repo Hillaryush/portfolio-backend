@@ -34,6 +34,11 @@ app.get("/", (req, res) => {
 const adminAuth = require("./routes/adminAuth");
 
 app.use("/api/admin", adminAuth);
+
+app.get('/ping', (req, res) => {
+  res.status(200).json({ status: 'alive' });
+});
+
 const adminMessages = require("./routes/adminMessages");
 
 app.use("/api/admin", adminMessages);
